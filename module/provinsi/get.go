@@ -1,4 +1,4 @@
-package lokasi
+package provinsi
 
 import (
 	"github.com/labstack/echo/v4"
@@ -13,17 +13,26 @@ type Provinsi struct {
 }
 
 func GetProvinisiAll(c echo.Context) error {
+	provinsi := c.QueryParam("provinsi")
+
 	// Connection handling
 	db := mysql.DBConnection()
 	defer db.Close()
 
-	provinsi := []Provinsi{}
-	err := db.Select(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI")
-	if err != nil {
-		log.Panic(err)
+	listProvinsi := []Provinsi{}
+	if provinsi != "" {
+		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE PROVINSI LIKE '%"+provinsi+"%'")
+		if err != nil {
+			log.Panic(err)
+		}
+	} else {
+		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI")
+		if err != nil {
+			log.Panic(err)
+		}
 	}
 
-	return c.JSON(http.StatusOK, provinsi)
+	return c.JSON(http.StatusOK, listProvinsi)
 }
 
 func GetProvinsiById(c echo.Context) error {
