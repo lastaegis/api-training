@@ -50,7 +50,7 @@ func GetProvinsiById(c echo.Context) error {
 	provinsi := Provinsi{}
 	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id+" AND DELETED_AT IS NULL")
 	if err != nil {
-		log.Panic(err)
+		return c.NoContent(http.StatusNoContent)
 	}
 
 	result := map[string]interface{}{
