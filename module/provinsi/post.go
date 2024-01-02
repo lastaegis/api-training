@@ -16,7 +16,7 @@ func InsertProvinsi(c echo.Context) error {
 	defer db.Close()
 
 	transaction := db.MustBegin()
-	_, err := transaction.NamedExec(`INSERT INTO PROVINSI (PROVINSI, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY) VALUE (:provinsi, :created_at, :created_by, :updated_at, :updated_by)`,
+	_, err := transaction.NamedExec(`INSERT INTO PROVINSI (PROVINSI, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY, SYNC_STATUS) VALUE (:provinsi, :created_at, :created_by, :updated_at, :updated_by, 0)`,
 		map[string]interface{}{
 			"provinsi":   provinsi,
 			"created_at": time.Now(),

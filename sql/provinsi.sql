@@ -7,7 +7,7 @@ create table if not exists PROVINSI
     CREATED_BY  varchar(255) null,
     UPDATED_AT  datetime     null,
     UPDATED_BY  varchar(255) null,
-    DELETE_AT   datetime     null,
+    DELETED_AT  datetime     null,
     DELETED_BY  varchar(255) null,
     SYNC_STATUS tinyint      null
 );

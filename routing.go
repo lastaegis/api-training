@@ -10,6 +10,8 @@ func RoutingAPI(echo *echo.Echo) {
 	echo.GET("/provinsi", provinsi.GetProvinisiAll)
 	echo.GET("/provinsi/:id", provinsi.GetProvinsiById)
 	echo.POST("/provinsi", provinsi.InsertProvinsi)
+	echo.PUT("/provinsi/:id", provinsi.UpdateProvinsi)
+	echo.DELETE("/provinsi/:id", provinsi.DeleteProvinsi)
 
 	// Start Server
 	echo.Logger.Fatal(echo.Start(":8001"))

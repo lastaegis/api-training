@@ -21,18 +21,24 @@ func GetProvinisiAll(c echo.Context) error {
 
 	listProvinsi := []Provinsi{}
 	if provinsi != "" {
-		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE PROVINSI LIKE '%"+provinsi+"%'")
+		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE PROVINSI LIKE '%"+provinsi+"%' AND DELETED_AT IS NULL")
 		if err != nil {
 			log.Panic(err)
 		}
 	} else {
-		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI")
+		err := db.Select(&listProvinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE DELETED_AT IS NULL")
 		if err != nil {
 			log.Panic(err)
 		}
 	}
 
-	return c.JSON(http.StatusOK, listProvinsi)
+	result := map[string]interface{}{
+		"status":  200,
+		"message": "success",
+		"data":    listProvinsi,
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func GetProvinsiById(c echo.Context) error {
@@ -42,10 +48,16 @@ func GetProvinsiById(c echo.Context) error {
 	defer db.Close()
 
 	provinsi := Provinsi{}
-	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id)
+	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id+" AND DELETED_AT IS NULL")
 	if err != nil {
 		log.Panic(err)
 	}
 
-	return c.JSON(http.StatusOK, provinsi)
+	result := map[string]interface{}{
+		"status":  200,
+		"message": "success",
+		"data":    provinsi,
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
