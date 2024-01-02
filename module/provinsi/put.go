@@ -2,6 +2,7 @@ package provinsi
 
 import (
 	"github.com/labstack/echo/v4"
+	general_structure "latihan-api/module/general-structure"
 	"latihan-api/mysql"
 	"log"
 	"net/http"
@@ -30,8 +31,9 @@ func UpdateProvinsi(c echo.Context) error {
 	}
 	transaction.Commit()
 
-	result := map[string]interface{}{
-		"message": "Data provinsi berhasil diupdate",
+	result := &general_structure.ResponsePut{
+		Status:  200,
+		Message: "Data successfully updated",
 	}
 
 	return c.JSON(http.StatusOK, result)

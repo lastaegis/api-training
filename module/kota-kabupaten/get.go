@@ -2,16 +2,11 @@ package kota_kabupaten
 
 import (
 	"github.com/labstack/echo/v4"
+	general_structure "latihan-api/module/general-structure"
 	"latihan-api/mysql"
 	"log"
 	"net/http"
 )
-
-type StructKotaKabupaten struct {
-	ID             int    `db:"ID"`
-	PROVINSI       string `db:"PROVINSI"`
-	KOTA_KABUPATEN string `db:"KOTA_KABUPATEN"`
-}
 
 func GetKotaKabupatenAll(c echo.Context) error {
 	idProvinsi := c.QueryParam("id_provinsi")
@@ -46,10 +41,11 @@ func GetKotaKabupatenAll(c echo.Context) error {
 	}
 
 	// Render result
-	result := map[string]interface{}{
-		"status_code": 200,
-		"message":     "success",
-		"data":        listKotaKabupaten,
+	result := &general_structure.ResponseGet{
+		Status:    200,
+		Message:   "success",
+		TotalData: int32(len(listKotaKabupaten)),
+		Data:      listKotaKabupaten,
 	}
 
 	return c.JSON(http.StatusOK, result)
@@ -74,10 +70,11 @@ func GetKotaKabupatenById(c echo.Context) error {
 	}
 
 	// Render result
-	result := map[string]interface{}{
-		"status_code": 200,
-		"message":     "success",
-		"data":        dataKotaKabupaten,
+	result := &general_structure.ResponseGet{
+		Status:    http.StatusOK,
+		Message:   "success",
+		TotalData: 1,
+		Data:      dataKotaKabupaten,
 	}
 
 	return c.JSON(http.StatusOK, result)

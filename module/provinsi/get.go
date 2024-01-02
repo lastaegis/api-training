@@ -2,21 +2,11 @@ package provinsi
 
 import (
 	"github.com/labstack/echo/v4"
+	general_structure "latihan-api/module/general-structure"
 	"latihan-api/mysql"
 	"log"
 	"net/http"
 )
-
-type Provinsi struct {
-	ID       int32  `json:"id" db:"ID"`
-	PROVINSI string `json:"provinsi" db:"PROVINSI"`
-}
-
-type Response struct {
-	Status  int32       `json:"status"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
 
 func GetProvinisiAll(c echo.Context) error {
 	provinsi := c.QueryParam("provinsi")
@@ -38,10 +28,11 @@ func GetProvinisiAll(c echo.Context) error {
 		}
 	}
 
-	result := &Response{
-		Status:  200,
-		Message: "success",
-		Data:    listProvinsi,
+	result := &general_structure.ResponseGet{
+		Status:    200,
+		Message:   "success",
+		TotalData: int32(len(listProvinsi)),
+		Data:      listProvinsi,
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -55,7 +46,7 @@ func GetProvinsiById(c echo.Context) error {
 	provinsi := Provinsi{}
 	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id+" AND DELETED_AT IS NULL")
 	if err != nil {
-		emptyResult := &Response{
+		emptyResult := &general_structure.ResponseGet{
 			Status:  204,
 			Message: "ID Provinsi " + id + " tidak tersedia",
 			Data:    make([]Provinsi, 0),
@@ -63,10 +54,11 @@ func GetProvinsiById(c echo.Context) error {
 		return c.JSON(http.StatusOK, emptyResult)
 	}
 
-	result := &Response{
-		Status:  200,
-		Message: "success",
-		Data:    provinsi,
+	result := &general_structure.ResponseGet{
+		Status:    200,
+		Message:   "success",
+		TotalData: 1,
+		Data:      provinsi,
 	}
 
 	return c.JSON(http.StatusOK, result)

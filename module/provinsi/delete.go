@@ -2,6 +2,7 @@ package provinsi
 
 import (
 	"github.com/labstack/echo/v4"
+	general_structure "latihan-api/module/general-structure"
 	"latihan-api/mysql"
 	"log"
 	"net/http"
@@ -17,7 +18,7 @@ func DeleteProvinsi(c echo.Context) error {
 	defer db.Close()
 
 	transaction := db.MustBegin()
-	_, err := transaction.NamedExec("UPDATE PROVINSI SET DELETE_AT = :timestamp, DELETED_BY = :executor, SYNC_STATUS = 0 WHERE ID = :id", map[string]interface{}{
+	_, err := transaction.NamedExec("UPDATE PROVINSI SET DELETED_AT = :timestamp, DELETED_BY = :executor, SYNC_STATUS = 0 WHERE ID = :id", map[string]interface{}{
 		"id":        id,
 		"timestamp": time.Now(),
 		"executor":  executor,
@@ -29,9 +30,9 @@ func DeleteProvinsi(c echo.Context) error {
 
 	transaction.Commit()
 
-	result := map[string]interface{}{
-		"status":  200,
-		"message": "Data delete success",
+	result := &general_structure.ResponseDelete{
+		Status:  200,
+		Message: "Data successfully delete",
 	}
 
 	return c.JSON(http.StatusOK, result)
