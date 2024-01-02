@@ -8,8 +8,14 @@ import (
 )
 
 type Provinsi struct {
-	ID       int    `db:"ID"`
-	PROVINSI string `db:"PROVINSI"`
+	ID       int32  `json:"id" db:"ID"`
+	PROVINSI string `json:"provinsi" db:"PROVINSI"`
+}
+
+type Response struct {
+	Status  int32       `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 func GetProvinisiAll(c echo.Context) error {
@@ -32,12 +38,11 @@ func GetProvinisiAll(c echo.Context) error {
 		}
 	}
 
-	result := map[string]interface{}{
-		"status":  200,
-		"message": "success",
-		"data":    listProvinsi,
+	result := &Response{
+		Status:  200,
+		Message: "success",
+		Data:    listProvinsi,
 	}
-
 	return c.JSON(http.StatusOK, result)
 }
 
@@ -50,13 +55,18 @@ func GetProvinsiById(c echo.Context) error {
 	provinsi := Provinsi{}
 	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id+" AND DELETED_AT IS NULL")
 	if err != nil {
-		return c.NoContent(http.StatusNoContent)
+		emptyResult := &Response{
+			Status:  204,
+			Message: "ID Provinsi " + id + " tidak tersedia",
+			Data:    make([]Provinsi, 0),
+		}
+		return c.JSON(http.StatusOK, emptyResult)
 	}
 
-	result := map[string]interface{}{
-		"status":  200,
-		"message": "success",
-		"data":    provinsi,
+	result := &Response{
+		Status:  200,
+		Message: "success",
+		Data:    provinsi,
 	}
 
 	return c.JSON(http.StatusOK, result)
