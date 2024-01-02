@@ -29,7 +29,7 @@ func GetProvinisiAll(c echo.Context) error {
 	}
 
 	result := &general_structure.ResponseGet{
-		Status:    200,
+		Status:    http.StatusOK,
 		Message:   "success",
 		TotalData: int32(len(listProvinsi)),
 		Data:      listProvinsi,
@@ -47,7 +47,7 @@ func GetProvinsiById(c echo.Context) error {
 	err := db.Get(&provinsi, "SELECT ID, PROVINSI FROM PROVINSI WHERE ID = "+id+" AND DELETED_AT IS NULL")
 	if err != nil {
 		emptyResult := &general_structure.ResponseGet{
-			Status:  204,
+			Status:  http.StatusNoContent,
 			Message: "ID Provinsi " + id + " tidak tersedia",
 			Data:    make([]Provinsi, 0),
 		}
@@ -55,7 +55,7 @@ func GetProvinsiById(c echo.Context) error {
 	}
 
 	result := &general_structure.ResponseGet{
-		Status:    200,
+		Status:    http.StatusOK,
 		Message:   "success",
 		TotalData: 1,
 		Data:      provinsi,

@@ -31,7 +31,7 @@ func DeleteProvinsi(c echo.Context) error {
 	transaction.Commit()
 
 	result := &general_structure.ResponseDelete{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Data successfully delete",
 	}
 

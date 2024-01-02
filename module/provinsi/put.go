@@ -32,7 +32,7 @@ func UpdateProvinsi(c echo.Context) error {
 	transaction.Commit()
 
 	result := &general_structure.ResponsePut{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Data successfully updated",
 	}
 

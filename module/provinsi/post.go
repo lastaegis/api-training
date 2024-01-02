@@ -32,7 +32,7 @@ func InsertProvinsi(c echo.Context) error {
 	transaction.Commit()
 
 	result := &general_structure.ResponsePost{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Data provinsi successfully save",
 	}
 

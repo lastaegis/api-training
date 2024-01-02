@@ -42,7 +42,7 @@ func GetKotaKabupatenAll(c echo.Context) error {
 
 	// Render result
 	result := &general_structure.ResponseGet{
-		Status:    200,
+		Status:    http.StatusOK,
 		Message:   "success",
 		TotalData: int32(len(listKotaKabupaten)),
 		Data:      listKotaKabupaten,
