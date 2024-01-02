@@ -1,13 +1,23 @@
 package mysql
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"os"
 	"time"
 )
 
 func DBConnection() *sqlx.DB {
-	db, err := sqlx.Connect("mysql", "root:root@tcp(127.0.0.1:3306)/latihan_api_go")
+	dbDriver := os.Getenv("DB_DRIVER")
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbSchema := os.Getenv("DB_SCHEMA")
+	fmt.Println(dbDriver)
+
+	db, err := sqlx.Connect(dbDriver, dbUsername+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbSchema)
 
 	// Stop runtime immediately
 	if err != nil {

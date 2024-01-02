@@ -16,13 +16,14 @@ func InsertProvinsi(c echo.Context) error {
 	defer db.Close()
 
 	transaction := db.MustBegin()
-	_, err := transaction.NamedExec(`INSERT INTO PROVINSI (PROVINSI, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY, SYNC_STATUS) VALUE (:provinsi, :created_at, :created_by, :updated_at, :updated_by, 0)`,
+	_, err := transaction.NamedExec(`INSERT INTO PROVINSI (PROVINSI, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY, SYNC_STATUS) VALUE (:provinsi, :created_at, :created_by, :updated_at, :updated_by, :sync_status)`,
 		map[string]interface{}{
-			"provinsi":   provinsi,
-			"created_at": time.Now(),
-			"created_by": executor,
-			"updated_at": time.Now(),
-			"updated_by": executor,
+			"provinsi":    provinsi,
+			"created_at":  time.Now(),
+			"created_by":  executor,
+			"updated_at":  time.Now(),
+			"updated_by":  executor,
+			"sync_status": 0,
 		})
 	if err != nil {
 		log.Panic(err)
@@ -30,6 +31,7 @@ func InsertProvinsi(c echo.Context) error {
 	transaction.Commit()
 
 	result := map[string]interface{}{
+		"status":  200,
 		"message": "Data saved to Database",
 	}
 
