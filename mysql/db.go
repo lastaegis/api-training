@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"os"
@@ -15,7 +14,6 @@ func DBConnection() *sqlx.DB {
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbSchema := os.Getenv("DB_SCHEMA")
-	fmt.Println(dbDriver)
 
 	db, err := sqlx.Connect(dbDriver, dbUsername+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbSchema)
 
