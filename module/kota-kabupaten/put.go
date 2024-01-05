@@ -1,7 +1,6 @@
 package kota_kabupaten
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	general_structure "latihan-api/module/general-structure"
 	"latihan-api/mysql"
@@ -9,6 +8,14 @@ import (
 	"net/http"
 	"time"
 )
+
+type PeremetsUpdate struct {
+	IDKotaKabupaten *int
+	IDProvinsi      *int
+	KotaKabupaten   string
+	UpdatedAt       time.Time
+	UpdatedBy       string
+}
 
 func UpdateKotaKabupaten(c echo.Context) error {
 	idKotaKabupaten := c.Param("id")
@@ -32,7 +39,6 @@ func UpdateKotaKabupaten(c echo.Context) error {
 		sql += ` KOTA_KABUPATEN = :kotaKabupaten, `
 	}
 	if executor == "" {
-		fmt.Println("Test")
 		result := &general_structure.ResponsePut{
 			Status:  http.StatusUnprocessableEntity,
 			Message: "Parameters executor missing",

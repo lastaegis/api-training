@@ -21,3 +21,9 @@ type ResponseDelete struct {
 	Status  int32  `json:"status"`
 	Message string `json:"message"`
 }
+
+type ResponseFailed struct {
+	Status  int32    `json:"status"`
+	Message []string `json:"message"`
+	Error   []string `json:"error"`
+}
