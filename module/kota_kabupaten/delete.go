@@ -2,7 +2,7 @@ package kota_kabupaten
 
 import (
 	"github.com/labstack/echo/v4"
-	general_structure "latihan-api/module/general-structure"
+	general_structure "latihan-api/module/general_structure"
 	"latihan-api/mysql"
 	"log"
 	"net/http"

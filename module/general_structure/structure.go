@@ -27,3 +27,7 @@ type ResponseFailed struct {
 	Message []string `json:"message"`
 	Error   []string `json:"error"`
 }
+
+type ResponseBadRequest struct {
+	Message string `json:"message"`
+}
