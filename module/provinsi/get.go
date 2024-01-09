@@ -1,6 +1,7 @@
 package provinsi
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"latihan-api/helper"
 	"latihan-api/module/general_structure"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"strconv"
 )
 
 // Daftar query parameters yang disediakan pada endpoint: /provinsi?query_params
@@ -15,7 +17,10 @@ import (
 // pada data slice dibawah
 var listAvailableQueryParams = []string{
 	"provinsi",
+	"limit",
 }
+
+var defaultLimit = 10
 
 // GetProvinisiAll Logic yang digunakan untuk mendapatkan data seluruh provinsi
 // ataupun melakukan pencarian berdasarkan paramaters yang disediakan
@@ -24,28 +29,38 @@ var listAvailableQueryParams = []string{
 func GetProvinisiAll(c echo.Context) error {
 	// Validate all incoming params
 	resultQueryParamValidation := validateQueryParams(c.QueryParams())
+
 	if resultQueryParamValidation != nil {
 		return c.JSON(http.StatusBadRequest, resultQueryParamValidation)
 	}
 
 	// Get Post Data
 	provinsi := c.QueryParam("provinsi")
+	limit := c.QueryParam("limit")
 
 	// Connection handling
 	db := mysql.DBConnection()
 	defer db.Close()
 
 	listProvinsi := []Provinsi{}
+	sql := `SELECT ID, PROVINSI FROM PROVINSI `
 	if provinsi != "" {
-		err := db.Select(&listProvinsi, `SELECT ID, PROVINSI FROM PROVINSI WHERE PROVINSI LIKE '%`+provinsi+`%' AND DELETED_AT IS NULL`)
-		if err != nil {
-			log.Panic(err)
-		}
+		sql = sql + `WHERE PROVINSI LIKE '%` + provinsi + `%' AND DELETED_AT IS NULL `
 	} else {
-		err := db.Select(&listProvinsi, `SELECT ID, PROVINSI FROM PROVINSI WHERE DELETED_AT IS NULL`)
-		if err != nil {
-			log.Panic(err)
-		}
+		sql = sql + `WHERE DELETED_AT IS NULL `
+	}
+
+	if limit != "" {
+		sql = sql + "LIMIT " + limit
+	} else {
+		sql = sql + "LIMIT " + strconv.FormatInt(int64(defaultLimit), defaultLimit)
+	}
+
+	fmt.Println(sql)
+
+	err := db.Select(&listProvinsi, sql)
+	if err != nil {
+		log.Panic(err)
 	}
 
 	lenProvinsi := len(listProvinsi)
@@ -104,17 +119,20 @@ func GetProvinsiById(c echo.Context) error {
 // response kembali query parameter tidak ditemukan
 func validateQueryParams(inboundQueryParams interface{}) interface{} {
 	// Declare result var
-	var result general_structure.ResponseBadRequest
+	var result interface{}
 
 	// Manipulate interface inbound query params for loop
 	inboundQPReflect := reflect.ValueOf(inboundQueryParams)
-	for _, key := range inboundQPReflect.MapKeys() {
-		bv := helper.FindNeedle(listAvailableQueryParams, key.String())
-		if !bv {
-			result = *&general_structure.ResponseBadRequest{
-				Message: key.String() + " tidak tersedia sebagai paramater",
+	if inboundQPReflect.Len() > 0 {
+		for _, key := range inboundQPReflect.MapKeys() {
+			bv := helper.FindNeedle(listAvailableQueryParams, key.String())
+			if !bv {
+				result = *&general_structure.ResponseBadRequest{
+					Message: key.String() + " tidak tersedia sebagai paramater",
+				}
 			}
 		}
 	}
+
 	return result
 }
