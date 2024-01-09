@@ -5,7 +5,7 @@ Application for training create API based on golang programming language with My
 1. [Echo Framework](https://echo.labstack.com/)
 2. [MySQL Driver](https://github.com/go-sql-driver/mysql)
 3. [SQLX](https://github.com/jmoiron/sqlx)
-4. [GoEnv](github.com/joho/godotenv)
+4. [GoEnv](https://github.com/joho/godotenv)
 
 # DB Schema
 1. Table Provinsi
